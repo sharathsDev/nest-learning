@@ -1,5 +1,5 @@
 ### GET Request
-GET http://localhost:3001/auth/17 HTTP/1.1
+GET http://localhost:3001/auth/18 HTTP/1.1
 
 ### GET Request
 GET http://localhost:3001/auth?email=Marydoe@example.com HTTP/1.1
