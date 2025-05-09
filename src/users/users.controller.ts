@@ -8,7 +8,7 @@ import {
   Delete,
   Query,
   NotFoundException,
-  UseInterceptors,
+  UseGuards,
   Session,
 } from '@nestjs/common';
 import { createUserDto } from './dto/create-user.dto';
@@ -20,13 +20,13 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './users.entity';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { AuthGuard } from '@/guard/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
-@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(private usersService: UsersService, private authService: AuthService) { }
+
 
   @Post('/signup')
   async createUser(@Body() body: createUserDto, @Session() session: any) {
@@ -50,7 +50,9 @@ export class UsersController {
     return;
   }
 
+
   @Get('/whoami')
+  @UseGuards(AuthGuard)
   whoAmI(@CurrentUser() user: User) {
     if (!user) {
       throw new NotFoundException('User not found');
