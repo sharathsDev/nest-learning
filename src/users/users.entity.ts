@@ -5,13 +5,12 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  AfterLoad,
 } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;
@@ -21,6 +20,9 @@ export class User {
 
   @Column()
   password: string;
+
+
+
 
   @AfterInsert()
   logInsert() {
@@ -35,10 +37,5 @@ export class User {
   @AfterRemove()
   logRemove() {
     console.log('Removed user with id', this.id);
-  }
-
-  @AfterLoad()
-  logLoad() {
-    console.log('Loaded user with id', this.id);
   }
 }

@@ -14,12 +14,10 @@ export function Serialize<T>(dto: Type<T>) {
 }
 
 export class SerializeInterceptor<T> implements NestInterceptor {
-  constructor(private dto: Type<T>) {}
-  intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
-    // console.log('Before the request is handled...', context);
+  constructor(private dto: Type<T>) { }
+  intercept(context: ExecutionContext, handler: CallHandler): Observable<T> {
     return handler.handle().pipe(
-      map((data: any) => {
-        // console.log('Before the response is sent...', data);
+      map((data: unknown) => {
         return plainToClass(this.dto, data, { excludeExtraneousValues: true });
       }),
     );

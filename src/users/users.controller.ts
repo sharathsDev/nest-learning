@@ -8,26 +8,59 @@ import {
   Delete,
   Query,
   NotFoundException,
+  UseInterceptors,
+  Session,
 } from '@nestjs/common';
 import { createUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { updateUserDto } from './dto/update-user.dto';
 import { Serialize } from '@/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
+import { AuthService } from './auth.service';
+import { LoginUserDto } from './dto/login-user.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './users.entity';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 
-@Serialize(UserDto)
 @Controller('auth')
+@Serialize(UserDto)
+@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService, private authService: AuthService) { }
 
   @Post('/signup')
-  createUser(@Body() body: createUserDto) {
-    this.usersService.create(body.name, body.email, body.password);
+  async createUser(@Body() body: createUserDto, @Session() session: any) {
+    const user = await this.authService.signup(body.name, body.email, body.password);
+
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/signin')
+  async signin(@Body() body: LoginUserDto, @Session() session: any) {
+    const user = await this.authService.signin(body.email, body.password);
+
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/signout')
+  async signout(@Session() session: any) {
+    session.userId = null;
+    return;
+  }
+
+  @Get('/whoami')
+  whoAmI(@CurrentUser() user: User) {
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   @Get('/:id')
   async findUser(@Param('id') id: string) {
-    const user = await this.usersService.findOne(parseInt(id));
+    const user = await this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException(`User not found with id ${id}`);
     }
@@ -45,11 +78,11 @@ export class UsersController {
 
   @Patch('/:id')
   updateUser(@Body() body: updateUserDto, @Param('id') id: string) {
-    return this.usersService.update(parseInt(id), body);
+    return this.usersService.update(id, body);
   }
 
   @Delete('/:id')
   removeUser(@Param('id') id: string) {
-    return this.usersService.remove(parseInt(id));
+    return this.usersService.remove(id);
   }
 }

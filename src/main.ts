@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+const cookieSession = require('cookie-session');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +10,10 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  app.use(cookieSession({
+    keys: ['mysecret'],
+    maxAge: 24 * 60 * 60 * 1000,
+  }));
   await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap().catch(console.error);
