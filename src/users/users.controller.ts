@@ -14,13 +14,13 @@ import {
 import { createUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { updateUserDto } from './dto/update-user.dto';
-import { Serialize } from '@/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './users.entity';
-import { AuthGuard } from '@/guard/auth.guard';
+import { AuthGuard } from '../guard/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
