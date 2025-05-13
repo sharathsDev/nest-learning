@@ -16,15 +16,15 @@ describe('Authentication (e2e)', () => {
         await app.init();
     });
 
-    it('signup new user', () => {
-        const userName = 'Dell Doe';
-        const userEmail = 'Delldoe@example.com';
-        return request(app.getHttpServer())
+    it('should signup new user', async () => {
+        const userName = 'Will Doe';
+        const userEmail = 'Willdoe@example.com';
+        return await request(app.getHttpServer())
             .post('/auth/signup')
             .send({
                 name: userName,
                 email: userEmail,
-                password: "Delldoe123"
+                password: "Willdoe123"
             })
             .expect(201)
             .then((response) => {
@@ -33,5 +33,27 @@ describe('Authentication (e2e)', () => {
                 expect(name).toEqual(userName);
                 expect(email).toEqual(userEmail);
             });
+    });
+
+    it('should signin as existing user', async () => {
+        const userName = 'Will Doe';
+        const userEmail = 'Willdoe@example.com';
+        const res = await request(app.getHttpServer())
+            .post('/auth/signin')
+            .send({
+                email: userEmail,
+                password: "Willdoe123"
+            })
+            .expect(201)
+
+        const cookie = res.get('Set-Cookie');
+        expect(cookie).toBeDefined();
+        const { body } = await request(app.getHttpServer())
+            .get('/auth/whoami')
+            .set('Cookie', cookie!)
+            .expect(200)
+
+        expect(body.email).toEqual(userEmail);
+        expect(body.name).toEqual(userName);
     });
 });
