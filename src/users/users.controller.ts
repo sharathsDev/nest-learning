@@ -25,12 +25,18 @@ import { AuthGuard } from '../guard/auth.guard';
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private usersService: UsersService, private authService: AuthService) { }
-
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Post('/signup')
   async createUser(@Body() body: createUserDto, @Session() session: any) {
-    const user = await this.authService.signup(body.name, body.email, body.password);
+    const user = await this.authService.signup(
+      body.name,
+      body.email,
+      body.password,
+    );
 
     session.userId = user.id;
     return user;
@@ -49,7 +55,6 @@ export class UsersController {
     session.userId = null;
     return;
   }
-
 
   @Get('/whoami')
   @UseGuards(AuthGuard)

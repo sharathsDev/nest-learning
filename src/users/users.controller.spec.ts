@@ -51,7 +51,12 @@ describe('UsersController', () => {
         return Promise.resolve({ id: '1', name, email, password } as User);
       }),
       signin: jest.fn((email: string, password: string) => {
-        return Promise.resolve({ id: '1', name: 'test', email, password } as User);
+        return Promise.resolve({
+          id: '1',
+          name: 'test',
+          email,
+          password,
+        } as User);
       }),
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -97,6 +102,5 @@ describe('UsersController', () => {
       expect(user.id).toEqual('1');
       expect(session.userId).toEqual('1');
     });
-  })
-
+  });
 });

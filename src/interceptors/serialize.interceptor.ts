@@ -14,7 +14,7 @@ export function Serialize<T>(dto: Type<T>) {
 }
 
 export class SerializeInterceptor<T> implements NestInterceptor {
-  constructor(private dto: Type<T>) { }
+  constructor(private dto: Type<T>) {}
   intercept(context: ExecutionContext, handler: CallHandler): Observable<T> {
     return handler.handle().pipe(
       map((data: unknown) => {

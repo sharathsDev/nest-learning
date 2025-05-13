@@ -32,28 +32,31 @@ const cookieSession = require('cookie-session');
         synchronize: true,
       }),
     }),
-    ConfigModule.forRoot(
-      {
-        isGlobal: true,
-        envFilePath: `.env.${process.env.NODE_ENV}`,
-      }
-    )
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_PIPE,
-    useValue: new ValidationPipe({
-      whitelist: true,
-    }),
-  }],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
 })
 export class AppModule {
   configure(consumer) {
     consumer
-      .apply(cookieSession({
-        keys: ['mysecret'],
-        maxAge: 24 * 60 * 60 * 1000,
-      }))
+      .apply(
+        cookieSession({
+          keys: ['mysecret'],
+          maxAge: 24 * 60 * 60 * 1000,
+        }),
+      )
       .forRoutes('*');
   }
 }

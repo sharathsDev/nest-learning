@@ -1,0 +1,40 @@
+@Base_URL= http://localhost:3001
+
+### Create Report
+
+POST {{Base_URL}}/reports HTTP/1.1
+Content-Type: application/json
+
+{
+    "make": "Toyota",
+    "model": "Camry",
+    "year": 2020,
+    "lng": 122.084051,
+    "lat": 37.385348,
+    "mileage": 1000,
+    "price": 10000
+}
+
+### Get All Reports
+
+GET {{Base_URL}}/reports HTTP/1.1
+Content-Type: application/json
+
+### Get Report by ID
+
+GET {{Base_URL}}/reports/:id HTTP/1.1
+Content-Type: application/json
+
+### Update Report
+
+PATCH {{Base_URL}}/reports/:id HTTP/1.1
+Content-Type: application/json
+
+{
+  "price": 12000
+}
+
+### Delete Report
+
+DELETE {{Base_URL}}/reports/:id HTTP/1.1
+Content-Type: application/json
