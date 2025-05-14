@@ -1,6 +1,6 @@
 import { OneToMany, Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Report } from '@/reports/report.entity';
+import { Report } from '../reports/report.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')

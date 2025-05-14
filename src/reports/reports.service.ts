@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './report.entity';
-import { User } from '@/users/users.entity';
+import { User } from '../users/users.entity';
 @Injectable()
 export class ReportsService {
-  constructor(@InjectRepository(Report) private repo: Repository<Report>) { }
+  constructor(@InjectRepository(Report) private repo: Repository<Report>) {}
 
   async createReport(
     make: string,
